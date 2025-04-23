@@ -1,0 +1,51 @@
+✅ 1. Check if a key pair exists
+ls -l ~/.ssh/
+You should see files like:
+
+id_rsa (private key)
+
+id_rsa.pub (public key)
+
+If not, generate them:
+
+ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+✅ 2. Make sure the key is added to ssh-agent
+# Run:
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_rsa
+✅ 3. Add the public key to GitHub
+# Run:
+cat ~/.ssh/id_rsa.pub
+Copy the full output (starts with ssh-rsa)
+Go to GitHub:
+
+Open: https://github.com/settings/keys
+
+Click "New SSH key"
+
+Paste the key
+
+Give it a name and save
+
+✅ 4. Create SSH config (optional but helpful)
+Create/edit SSH config:
+
+nano ~/.ssh/config
+# Add this:
+#####################
+Host github.com
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/id_rsa
+#####################
+Then save and exit.
+
+✅ 5. Fix permissions (important)
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/id_rsa
+chmod 644 ~/.ssh/id_rsa.pub
+✅ 6. Test
+ssh -T git@github.com
+If it's still failing, run with debug output:
+
+ssh -vT git@github.com
